@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import Movies from "./components/Movies"
 import Counters from "./components/Counters"
 import NavBar from './components/Navbar';
+import { Route, Redirect, Switch } from 'react-router-dom'
+import { Customers } from './components/Customers';
+import { Rentals } from './components/Rentals';
+import { Not_Found } from './components/Not_Found';
+import { Navigation } from './components/Navigation';
+import Movie_Form from './components/Movie_Form'
+import Login_Form from './components/Login_Form';
+import Register_Form from './components/Register_Form';
 
 class App extends React.Component {
     state = {
@@ -20,7 +28,7 @@ class App extends React.Component {
         counters[index].value++;
         this.setState({ counters });
     };
-    
+
     handleDecrement = counter => {
         const counters = [...this.state.counters];
         const index = counters.indexOf(counter);
@@ -30,7 +38,7 @@ class App extends React.Component {
     };
 
     handleReset = () => {
-        const counters = this.state.counters.map (c => {
+        const counters = this.state.counters.map(c => {
             c.value = 0;
             return c;
         });
@@ -39,25 +47,36 @@ class App extends React.Component {
 
     handleDelete = counterId => {
         const counters = this.state.counters.filter(c => c.id !== counterId);
-        this.setState({counters: counters});
+        this.setState({ counters: counters });
     };
 
-    render() { 
+    render() {
         return <main className="container">
-            <NavBar 
+            <Navigation />
+            <Switch>
+                <Route path="/register" component={Register_Form}></Route>
+                <Route path="/login" component={Login_Form}></Route>
+                <Route path="/movies/:id" component={Movie_Form}></Route>
+                <Route path="/movies" component={Movies}></Route>
+                <Route path="/customers" component={Customers}></Route>
+                <Route path="/rentals" component={Rentals}></Route>
+                <Route path="/not-found" component={Not_Found}></Route>
+                <Redirect from="/" exact to="/movies" />
+                <Redirect to="/not-found" />
+            </Switch>
+            <hr />
+            <NavBar
                 totalCounters={this.state.counters.filter(c => c.value > 0).length}
             />
             <Counters
-                counters={this.state.counters} 
+                counters={this.state.counters}
                 onReset={this.handleReset}
                 onIncrement={this.handleIncrement}
                 onDelete={this.handleDelete}
                 onDecrement={this.handleDecrement}
             />
-            <hr />
-            <Movies />
         </main>;
     }
 }
- 
+
 export default App;
