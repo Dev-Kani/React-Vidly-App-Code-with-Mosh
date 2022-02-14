@@ -10,6 +10,7 @@ import { Navigation } from './components/Navigation';
 import Movie_Form from './components/Movie_Form'
 import Login_Form from './components/Login_Form';
 import Register_Form from './components/Register_Form';
+import Add_Movie_Form from './components/Add_Movie_Form'
 
 class App extends React.Component {
     state = {
@@ -54,6 +55,7 @@ class App extends React.Component {
         return <main className="container">
             <Navigation />
             <Switch>
+                <Route path="/movies/new" component={Add_Movie_Form}></Route>
                 <Route path="/register" component={Register_Form}></Route>
                 <Route path="/login" component={Login_Form}></Route>
                 <Route path="/movies/:id" component={Movie_Form}></Route>

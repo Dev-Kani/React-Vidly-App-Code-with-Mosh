@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link, NavLink } from 'react-router-dom'
 import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from '../services/fakeGenreService';
 import List_Group from './List_Group';
@@ -6,6 +7,7 @@ import Pagination from './common/Pagination';
 import { paginate } from '../utilities/Paginate'
 import Movies_Table from './Movies_Table';
 import _, { filter } from "lodash"
+import Search_Box from './Search_Box'
 
 class Movies extends React.Component {
   state = {
@@ -13,6 +15,8 @@ class Movies extends React.Component {
     movies: [],
     currentPage: 1,
     pageSize: 4,
+    searchQuery: "",
+    selectedGenre: null,
     sortColumn: { path: 'title', order: 'asc' }
   }
 
@@ -40,17 +44,20 @@ class Movies extends React.Component {
   };
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 })
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 })
   };
 
   handleSort = sortColumn => {
-
     this.setState({ sortColumn })
   };
 
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 })
+  }
+
   getPagedData = () => {
     const { pageSize, currentPage, selectedGenre, sortColumn, movies: allMovies } = this.state;
-    const filtered = selectedGenre && selectedGenre._id
+    let filtered = selectedGenre && selectedGenre._id
       ? allMovies.filter(m => m.genre._id === selectedGenre._id)
       : allMovies;
 
@@ -82,6 +89,15 @@ class Movies extends React.Component {
           />
         </div>
         <div className="ml-4">
+          <div>
+            <Link
+              to="/movies/new"
+              className="btn btn-primary mb-2"
+              style={{ marginBottom: 20 }}
+            >New Movie</Link>
+          </div>
+          {/* value={searchQuery} */}
+          <Search_Box onChange={this.handleSearch} />
           <p>Showing {totalCount} movies in the database.</p>
           <Movies_Table
             movies={movies}
